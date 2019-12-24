@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import {HttpService} from '../../http-service/http.service'
 
 @Component({
   selector: 'app-converter',
@@ -18,8 +20,9 @@ export class ConverterComponent implements OnInit {
   Volume=['US liquid gallon','Mililitre','Litre']
   Temperature=['Celsius','Fahrenheit']
 
-  
-  constructor() { }
+  magnitude = new FormControl('')
+
+  constructor(private http:HttpService) { }
 
   ngOnInit() {
     this.arraySelection()
@@ -34,8 +37,12 @@ export class ConverterComponent implements OnInit {
     this.inputSelection="Metre"
     this.outputSelection="Centimeter"
     this.unitsArray=this.Length  
+    
+    
+    
     }
     
+  
 
     if(this.currentSelection === 'Volume'){
     this.unitsArray=this.Volume
@@ -51,6 +58,25 @@ export class ConverterComponent implements OnInit {
     }
 
   };
+
+  sendRequest(event:any):void{
+
+    console.log(this.magnitude.value,typeof(this.magnitude.value))
+    const request_data={
+
+      "magnitude":Number(this.magnitude.value),
+      "input_unit":"m",
+      "output_unit":"cm"
+  }
+    this.http.getResult('length',request_data).subscribe(data=>{
+
+      console.log(data,'--------->data')
+    },error =>{
+
+    })
+    
+
+  }
 
 
   

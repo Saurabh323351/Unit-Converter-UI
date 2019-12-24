@@ -16,7 +16,7 @@
       <div style="border:1px groove;width:45%;">
           <div> 
               <form>
-                  <input autocomplete="off" style="height:50px;width:98.5%;font-size:18px;">
+                  <input autocomplete="off" (keyup)="sendRequest($event)" [formControl]="magnitude" style="height:50px;width:98.5%;font-size:18px;">
               </form>
           </div>
           <div>
