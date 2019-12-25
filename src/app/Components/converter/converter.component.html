@@ -4,7 +4,7 @@
       <mat-form-field style="width:100%;background-color:lightgrey;">
       <mat-select [(value)]="currentSelection" >
           <mat-option  *ngFor="let parameter of selected" [value]="parameter" (click)="arraySelection()">{{parameter}}</mat-option>
-          
+            
       </mat-select>
      
       </mat-form-field>
@@ -37,7 +37,7 @@
       <div style="width:45%;border:1px groove;">
           <div> 
               <form>
-                  <input autocomplete="off" style="height:50px;width:98.5%;font-size:18px;">
+                  <input autocomplete="off" [value]="resultMagnitude?.result" style="height:50px;width:98.5%;font-size:18px;">
               </form>
           </div>
           <div>

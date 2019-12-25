@@ -3,16 +3,21 @@ import { FormControl } from '@angular/forms';
 import {HttpService} from '../../http-service/http.service'
 
 @Component({
-  selector: 'app-converter',
+  selector: 'app-converter', 
   templateUrl: './converter.component.html',
   styleUrls: ['./converter.component.css']
 })
 export class ConverterComponent implements OnInit {
 
   selected = ['Length','Volume','Temperature'];
-  selected_index=0
   currentSelection='Length';
   unitsArray:any=[]
+  request_data:any={}
+  resultMagnitude={
+    result:null
+  }
+
+
   Length=['Metre','Centimeter','Kilometer','Inch','Yard','Foot']
   inputSelection="Metre"
   outputSelection="Centimeter"
@@ -21,6 +26,33 @@ export class ConverterComponent implements OnInit {
   Temperature=['Celsius','Fahrenheit']
 
   magnitude = new FormControl('')
+
+  //mapping for Length
+
+  lengthMapping={
+    Metre:"m",
+    Centimeter:"cm",
+    Kilometer:"km",
+    Inch:"inch",
+    Yard:"yard",
+    Foot:"foot"
+    
+  }
+  
+  volumeMapping={
+    "US liquid gallon":"gallon",
+    Mililitre:"ml",
+    Litre:"l"
+    
+  }
+
+  temperatureMapping={
+    
+    Celsius:"C",
+    Fahrenheit:"F"
+    
+  }
+
 
   constructor(private http:HttpService) { }
 
@@ -42,8 +74,6 @@ export class ConverterComponent implements OnInit {
     
     }
     
-  
-
     if(this.currentSelection === 'Volume'){
     this.unitsArray=this.Volume
     this.inputSelection="Litre"
@@ -61,19 +91,35 @@ export class ConverterComponent implements OnInit {
 
   sendRequest(event:any):void{
 
-    console.log(this.magnitude.value,typeof(this.magnitude.value))
-    const request_data={
+    console.log(this.magnitude.value.length,typeof(this.magnitude.value))
+    // console.log(event,'--------->event')
 
-      "magnitude":Number(this.magnitude.value),
-      "input_unit":"m",
-      "output_unit":"cm"
-  }
-    this.http.getResult('length',request_data).subscribe(data=>{
+    if(this.magnitude.value.length == 0){
+      this.resultMagnitude.result=''
+    }
+    
+    if(this.currentSelection == 'Length'){
 
-      console.log(data,'--------->data')
-    },error =>{
+      this.request_data={
 
-    })
+        "magnitude":Number(this.magnitude.value),
+        "input_unit":this.lengthMapping[this.inputSelection],
+        "output_unit":this.lengthMapping[this.outputSelection]
+    }
+    console.log(this.request_data,'-->re')
+    }
+    if(this.magnitude.value.length !== 0){
+
+      this.http.getResult('/length',this.request_data).subscribe(data=>{
+
+        console.log(data,'--------->data')
+        
+        this.resultMagnitude.result=data["data"][0]["result"]
+      },error =>{
+  
+      })
+    }
+
     
 
   }
